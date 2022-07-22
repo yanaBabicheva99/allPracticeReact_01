@@ -2,7 +2,7 @@
 import './Style/App.css';
 import React, {useRef, useState} from "react";
 import PostList from "./components/PostList";
-
+import MyInput from "./components/UI/MyInput";
 import PostForm from "./components/PostForm";
 import MySelect from "./components/MySelect";
 
@@ -18,6 +18,7 @@ function App() {
     ])
 
     const [selectedSort, setSelectedSort] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
@@ -30,7 +31,7 @@ function App() {
 
     const sortPost = (sort) => {
         setSelectedSort(sort);
-        console.log(sort);
+       setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])))
 
     }
 
@@ -38,6 +39,10 @@ function App() {
     <div className="App">
         <PostForm create={createPost} />
         <hr style={{margin: '15px 0'}}/>
+        <MyInput
+            type='text'
+            placeholder='Поиск...'
+        />
         <MySelect
             value={selectedSort}
             onChange={sortPost}
