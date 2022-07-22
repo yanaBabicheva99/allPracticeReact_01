@@ -31,15 +31,24 @@ function App() {
 
     const sortPost = (sort) => {
         setSelectedSort(sort);
-       setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])))
-
     }
+    function getSortedPosts() {
+        if (selectedSort) {
+            return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]));
+        }
+        return posts;
+    }
+
+    const sortedPost = getSortedPosts()
+
 
   return (
     <div className="App">
         <PostForm create={createPost} />
         <hr style={{margin: '15px 0'}}/>
         <MyInput
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             type='text'
             placeholder='Поиск...'
         />
@@ -53,7 +62,7 @@ function App() {
             ]}
         />
         {posts.length !==0
-            ?  <PostList posts={posts} title='Список постов 1' onDelete={removePost}/>
+            ?  <PostList posts={sortedPost} title='Список постов 1' onDelete={removePost}/>
             :  <h1 style={{textAlign: 'center'}}>Посты не найдены</h1>
         }
     </div>
