@@ -1,6 +1,6 @@
 
 import './Style/App.css';
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, useMemo} from "react";
 import PostList from "./components/PostList";
 import MyInput from "./components/UI/MyInput";
 import PostForm from "./components/PostForm";
@@ -32,15 +32,17 @@ function App() {
     const sortPost = (sort) => {
         setSelectedSort(sort);
     }
-    function getSortedPosts() {
+
+    const sortedPost = useMemo(() => {
         if (selectedSort) {
             return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]));
         }
         return posts;
-    }
+    }, [selectedSort, posts]);
 
-    const sortedPost = getSortedPosts()
-
+    const sortedAndSearchedPost = useMemo(() => {
+       return sortedPost.filter(post => post.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    }, [searchQuery, sortedPost])
 
   return (
     <div className="App">
@@ -61,8 +63,8 @@ function App() {
                 {value: 'body', name: 'По описанию'}
             ]}
         />
-        {posts.length !==0
-            ?  <PostList posts={sortedPost} title='Список постов 1' onDelete={removePost}/>
+        {sortedAndSearchedPost.length !==0
+            ?  <PostList posts={sortedAndSearchedPost} title='Список постов 1' onDelete={removePost}/>
             :  <h1 style={{textAlign: 'center'}}>Посты не найдены</h1>
         }
     </div>
