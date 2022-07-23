@@ -8,6 +8,10 @@
   display: flex;
   justify-content: center;
   }
+.App {
+  width: 800px;
+}
+
 .post {
   display: flex;
   justify-content: space-between;
