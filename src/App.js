@@ -4,6 +4,7 @@ import React, {useRef, useState, useMemo} from "react";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import PostFilter from "./components/postFilter";
+import Pagination from "./components/Pagination";
 
 function App() {
     const [posts, setPosts] = useState([
@@ -38,12 +39,28 @@ function App() {
        return sortedPost.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()));
     }, [filter.query, sortedPost])
 
-  return (
+    const countPosts = sortedAndSearchedPost.length;
+    const sizePage = 2;
+    const [current, setCurrent] = useState(1);
+
+    const changeCurrent = function(page) {
+        setCurrent(page);
+    }
+
+    const changePosts = (current, sizePage, posts) => {
+        const firsIndex = (current - 1) * sizePage;
+        return [...posts].splice(firsIndex, sizePage);
+    }
+
+    const handleChange = changePosts(current, sizePage, sortedAndSearchedPost);
+
+    return (
     <div className="App">
         <PostForm create={createPost} />
-        <hr style={{margin: '15px 0'}}/>
+        <hr className='m-2'/>
         <PostFilter filter={filter} setFilter={setFilter}/>
-        <PostList posts={sortedAndSearchedPost} title='Список постов 1' onDelete={removePost}/>
+        <PostList posts={handleChange} title='Список постов 1' onDelete={removePost}/>
+        <Pagination countPosts={countPosts} sizePage={sizePage} changeCurrent={changeCurrent} current={current}/>
     </div>
   );
 }
