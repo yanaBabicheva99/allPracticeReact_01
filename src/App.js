@@ -6,6 +6,7 @@ import PostForm from "./components/PostForm";
 import PostFilter from "./components/postFilter";
 import MyModal from "./components/MyModal/MyModal";
 import MyButton from "./components/UI/MyButton";
+import {usePosts} from "./hooks/usePosts";
 function App() {
     const [posts, setPosts] = useState([
         {id:1, title:'JavaScript', body:'мультипарадигменный язык программирования.' +
@@ -30,16 +31,7 @@ function App() {
 
     }
 
-    const sortedPost = useMemo(() => {
-        if (filter.sort) {
-            return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]));
-        }
-        return posts;
-    }, [filter.sort, posts]);
-
-    const sortedAndSearchedPost = useMemo(() => {
-       return sortedPost.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()));
-    }, [filter.query, sortedPost])
+    const sortedAndSearchedPost = usePosts(posts, filter.sort, filter.query)
 
   return (
     <div className="App">
