@@ -4,7 +4,8 @@ import React, {useRef, useState, useMemo} from "react";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import PostFilter from "./components/postFilter";
-
+import MyModal from "./components/MyModal/MyModal";
+import MyButton from "./components/UI/MyButton";
 function App() {
     const [posts, setPosts] = useState([
         {id:1, title:'JavaScript', body:'мультипарадигменный язык программирования.' +
@@ -17,9 +18,11 @@ function App() {
     ])
 
     const [filter, setFilter] = useState({sort: '', query: ''})
+    const [visible, setVisible] = useState(false);
 
     const createPost = (newPost) => {
-        setPosts([...posts, newPost])
+        setPosts([...posts, newPost]);
+        setVisible(false);
     }
 
     const removePost = (post) => {
@@ -40,8 +43,16 @@ function App() {
 
   return (
     <div className="App">
-        <PostForm create={createPost} />
-        <hr style={{margin: '15px 0'}}/>
+        <MyButton onClick={() => setVisible(true)}>
+            Создать пост
+        </MyButton>
+        <MyModal
+            visible={visible}
+            setVisible={setVisible}
+        >
+            <PostForm create={createPost} />
+        </MyModal>
+        <hr className='m-2' />
         <PostFilter filter={filter} setFilter={setFilter}/>
         <PostList posts={sortedAndSearchedPost} title='Список постов 1' onDelete={removePost}/>
     </div>
